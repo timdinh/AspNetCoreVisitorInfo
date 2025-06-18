@@ -18,51 +18,53 @@ public static class VisitorIpAddress
     /// </summary>
     public static string GetVisitorIp(this HttpContext httpContext)
     {
+        var headers = httpContext.Request.Headers;
+
         // Cloudflare
-        if (httpContext.Request.Headers.TryGetValue("CF-Connecting-IP", out var cfConnectingIp) == true)
+        if (headers.TryGetValue("CF-Connecting-IP", out var cfConnectingIp) == true)
         {
             return cfConnectingIp.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor) == true)
+        if (headers.TryGetValue("X-Forwarded-For", out var forwardedFor) == true)
         {
             return forwardedFor.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Original-Forwarded-For", out var originalForwardedFor) == true)
+        if (headers.TryGetValue("X-Original-Forwarded-For", out var originalForwardedFor) == true)
         {
             return originalForwardedFor.ToString();
         }
 
         // RFC 7239 standard header
-        if (httpContext.Request.Headers.TryGetValue("Forwarded", out var forwarded) == true)
+        if (headers.TryGetValue("Forwarded", out var forwarded) == true)
         {
             return forwarded.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Real-IP", out var realIp) == true)
+        if (headers.TryGetValue("X-Real-IP", out var realIp) == true)
         {
             return realIp.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Client-IP", out var clientIp) == true)
+        if (headers.TryGetValue("X-Client-IP", out var clientIp) == true)
         {
             return clientIp.ToString();
         }
 
         // Kubernetes/cluster environments
-        if (httpContext.Request.Headers.TryGetValue("X-Cluster-Client-IP", out var clusterClientIp) == true)
+        if (headers.TryGetValue("X-Cluster-Client-IP", out var clusterClientIp) == true)
         {
             return clusterClientIp.ToString();
         }
 
         // Akami and other CDNs
-        if (httpContext.Request.Headers.TryGetValue("True-Client-IP", out var trueClientIp) == true)
+        if (headers.TryGetValue("True-Client-IP", out var trueClientIp) == true)
         {
             return trueClientIp.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-Address", out var cloudFront) == true)
+        if (headers.TryGetValue("CloudFront-Viewer-Address", out var cloudFront) == true)
         {
             return cloudFront.ToString();
         }
@@ -77,46 +79,48 @@ public static class VisitorIpAddress
     /// </summary>
     public static string GetVisitorCountry(this HttpContext httpContext)
     {
+        var headers = httpContext.Request.Headers;
+
         // Cloudflare
-        if (httpContext.Request.Headers.TryGetValue("CF-IPCountry", out var cfConnectingIp) == true)
+        if (headers.TryGetValue("CF-IPCountry", out var cfConnectingIp) == true)
         {
             return cfConnectingIp.ToString();
         }
 
         // Amazon CloudFront
-        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-Country", out var cloudFrontCountry))
+        if (headers.TryGetValue("CloudFront-Viewer-Country", out var cloudFrontCountry))
         {
             return cloudFrontCountry.ToString();
         }
 
         // Google App Engine / Google Cloud Load Balancer
-        if (httpContext.Request.Headers.TryGetValue("X-AppEngine-Country", out var appEngineCountry))
+        if (headers.TryGetValue("X-AppEngine-Country", out var appEngineCountry))
         {
             return appEngineCountry.ToString();
         }
 
         // Generic headers used by various providers
-        if (httpContext.Request.Headers.TryGetValue("X-Country-Code", out var countryCode))
+        if (headers.TryGetValue("X-Country-Code", out var countryCode))
         {
             return countryCode.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-GeoIP-Country", out var geoIpCountry))
+        if (headers.TryGetValue("X-GeoIP-Country", out var geoIpCountry))
         {
             return geoIpCountry.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Real-Country", out var realCountry))
+        if (headers.TryGetValue("X-Real-Country", out var realCountry))
         {
             return realCountry.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Forwarded-Country", out var forwardedCountry))
+        if (headers.TryGetValue("X-Forwarded-Country", out var forwardedCountry))
         {
             return forwardedCountry.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-Azure-ClientIP-Country", out var azureCountry))
+        if (headers.TryGetValue("X-Azure-ClientIP-Country", out var azureCountry))
         {
             return azureCountry.ToString();
         }
@@ -129,22 +133,24 @@ public static class VisitorIpAddress
     /// </summary>
     public static string GetVisitorCity(this HttpContext httpContext)
     {
-        if (httpContext.Request.Headers.TryGetValue("CF-IPCity", out var cfCity))
+        var headers = httpContext.Request.Headers;
+        
+        if (headers.TryGetValue("CF-IPCity", out var cfCity))
         {
             return cfCity.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-City", out var cloudFrontCity))
+        if (headers.TryGetValue("CloudFront-Viewer-City", out var cloudFrontCity))
         {
             return cloudFrontCity.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-AppEngine-City", out var appEngineCity))
+        if (headers.TryGetValue("X-AppEngine-City", out var appEngineCity))
         {
             return appEngineCity.ToString();
         }
 
-        if (httpContext.Request.Headers.TryGetValue("X-City-Name", out var cityName))
+        if (headers.TryGetValue("X-City-Name", out var cityName))
         {
             return cityName.ToString();
         }
