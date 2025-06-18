@@ -7,7 +7,7 @@
 
         <!-- NuGet Package Properties -->
         <PackageId>AspNetCoreVisitorInfo</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.2</Version>
         <Authors>Tim Dinh</Authors>
         <Company>FARENTAL</Company>
         <Description>A library for extracting visitor IP address and country information from ASP.NET Core HttpContext, with support for Cloudflare and proxy headers.</Description>
