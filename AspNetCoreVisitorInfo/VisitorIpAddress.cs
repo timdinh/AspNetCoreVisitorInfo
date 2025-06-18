@@ -18,6 +18,7 @@ public static class VisitorIpAddress
     /// </summary>
     public static string GetVisitorIp(this HttpContext httpContext)
     {
+        // Cloudflare
         if (httpContext.Request.Headers.TryGetValue("CF-Connecting-IP", out var cfConnectingIp) == true)
         {
             return cfConnectingIp.ToString();
@@ -28,9 +29,42 @@ public static class VisitorIpAddress
             return forwardedFor.ToString();
         }
 
+        if (httpContext.Request.Headers.TryGetValue("X-Original-Forwarded-For", out var originalForwardedFor) == true)
+        {
+            return originalForwardedFor.ToString();
+        }
+
+        // RFC 7239 standard header
+        if (httpContext.Request.Headers.TryGetValue("Forwarded", out var forwarded) == true)
+        {
+            return forwarded.ToString();
+        }
+
         if (httpContext.Request.Headers.TryGetValue("X-Real-IP", out var realIp) == true)
         {
             return realIp.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-Client-IP", out var clientIp) == true)
+        {
+            return clientIp.ToString();
+        }
+
+        // Kubernetes/cluster environments
+        if (httpContext.Request.Headers.TryGetValue("X-Cluster-Client-IP", out var clusterClientIp) == true)
+        {
+            return clusterClientIp.ToString();
+        }
+
+        // Akami and other CDNs
+        if (httpContext.Request.Headers.TryGetValue("True-Client-IP", out var trueClientIp) == true)
+        {
+            return trueClientIp.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-Address", out var cloudFront) == true)
+        {
+            return cloudFront.ToString();
         }
 
         return httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
@@ -43,11 +77,78 @@ public static class VisitorIpAddress
     /// </summary>
     public static string GetVisitorCountry(this HttpContext httpContext)
     {
+        // Cloudflare
         if (httpContext.Request.Headers.TryGetValue("CF-IPCountry", out var cfConnectingIp) == true)
         {
             return cfConnectingIp.ToString();
         }
 
-        return "";
+        // Amazon CloudFront
+        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-Country", out var cloudFrontCountry))
+        {
+            return cloudFrontCountry.ToString();
+        }
+
+        // Google App Engine / Google Cloud Load Balancer
+        if (httpContext.Request.Headers.TryGetValue("X-AppEngine-Country", out var appEngineCountry))
+        {
+            return appEngineCountry.ToString();
+        }
+
+        // Generic headers used by various providers
+        if (httpContext.Request.Headers.TryGetValue("X-Country-Code", out var countryCode))
+        {
+            return countryCode.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-GeoIP-Country", out var geoIpCountry))
+        {
+            return geoIpCountry.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-Real-Country", out var realCountry))
+        {
+            return realCountry.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-Forwarded-Country", out var forwardedCountry))
+        {
+            return forwardedCountry.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-Azure-ClientIP-Country", out var azureCountry))
+        {
+            return azureCountry.ToString();
+        }
+
+        return string.Empty;
+    }
+    
+    /// <summary>
+    /// Returns the city of the visitor based on various geolocation headers.
+    /// </summary>
+    public static string GetVisitorCity(this HttpContext httpContext)
+    {
+        if (httpContext.Request.Headers.TryGetValue("CF-IPCity", out var cfCity))
+        {
+            return cfCity.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("CloudFront-Viewer-City", out var cloudFrontCity))
+        {
+            return cloudFrontCity.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-AppEngine-City", out var appEngineCity))
+        {
+            return appEngineCity.ToString();
+        }
+
+        if (httpContext.Request.Headers.TryGetValue("X-City-Name", out var cityName))
+        {
+            return cityName.ToString();
+        }
+
+        return string.Empty;
     }
 }
