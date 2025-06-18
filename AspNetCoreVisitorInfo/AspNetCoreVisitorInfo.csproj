@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <!-- NuGet Package Properties -->
+        <PackageId>AspNetCoreVisitorInfo</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Tim Dinh</Authors>
+        <Company>FARENTAL</Company>
+        <Description>A library for extracting visitor IP address and country information from ASP.NET Core HttpContext, with support for Cloudflare and proxy headers.</Description>
+        <PackageTags>aspnetcore;ip-address;visitor;cloudflare;proxy</PackageTags>
+        <PackageProjectUrl>https://github.com/timdinh/AspNetCoreVisitorInfo</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/timdinh/AspNetCoreVisitorInfo</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <!-- Include README in package -->
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    
+</Project>
